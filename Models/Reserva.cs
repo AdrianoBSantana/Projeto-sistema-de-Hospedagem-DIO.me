@@ -15,16 +15,21 @@ namespace DesafioProjetoHospedagem.Models
 
         public void CadastrarHospedes(List<Pessoa> hospedes)
         {
-            // TODO: Verificar se a capacidade é maior ou igual ao número de hóspedes sendo recebido
-            // *IMPLEMENTE AQUI*
-            if (true)
+            // Verifica se a suíte foi definida
+            if (Suite == null)
+            {
+                throw new Exception("A suíte ainda não foi cadastrada para a reserva.");
+            }
+
+            // Regra: a capacidade deve ser maior ou igual ao número de hóspedes.
+            if (Suite.Capacidade >= hospedes.Count)
             {
                 Hospedes = hospedes;
             }
             else
             {
-                // TODO: Retornar uma exception caso a capacidade seja menor que o número de hóspedes recebido
-                // *IMPLEMENTE AQUI*
+                // Retorna uma exception caso a capacidade seja menor.
+                throw new Exception("A quantidade de hóspedes excede a capacidade da suíte.");
             }
         }
 
@@ -35,23 +40,20 @@ namespace DesafioProjetoHospedagem.Models
 
         public int ObterQuantidadeHospedes()
         {
-            // TODO: Retorna a quantidade de hóspedes (propriedade Hospedes)
-            // *IMPLEMENTE AQUI*
-            return 0;
+            // Retorna a quantidade de hóspedes (contando os itens da lista).
+            return Hospedes.Count;
         }
 
         public decimal CalcularValorDiaria()
         {
-            // TODO: Retorna o valor da diária
             // Cálculo: DiasReservados X Suite.ValorDiaria
-            // *IMPLEMENTE AQUI*
-            decimal valor = 0;
+            decimal valor = DiasReservados * Suite.ValorDiaria;
 
-            // Regra: Caso os dias reservados forem maior ou igual a 10, conceder um desconto de 10%
-            // *IMPLEMENTE AQUI*
-            if (true)
+            // Regra: Se os dias reservados forem 10 ou mais, conceder desconto de 10%.
+            if (DiasReservados >= 10)
             {
-                valor = 0;
+                // Aplica o desconto de 10%. Multiplicar por 0.90 é o mesmo que subtrair 10%.
+                valor = valor * 0.90m; 
             }
 
             return valor;

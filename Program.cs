@@ -1,25 +1,53 @@
-﻿using System.Text;
-using DesafioProjetoHospedagem.Models;
+﻿using DesafioProjetoHospedagem.Models;
 
-Console.OutputEncoding = Encoding.UTF8;
+try
+{
+    Console.WriteLine("--- Sistema de Reserva de Hotel ---");
 
-// Cria os modelos de hóspedes e cadastra na lista de hóspedes
-List<Pessoa> hospedes = new List<Pessoa>();
+    // --- Cadastro da Suíte ---
+    Console.Write("Digite o tipo da suíte (Ex: Premium, Luxo): ");
+    string tipoSuite = Console.ReadLine();
 
-Pessoa p1 = new Pessoa(nome: "Hóspede 1");
-Pessoa p2 = new Pessoa(nome: "Hóspede 2");
+    Console.Write("Digite a capacidade da suíte: ");
+    int capacidade = int.Parse(Console.ReadLine());
 
-hospedes.Add(p1);
-hospedes.Add(p2);
+    Console.Write("Digite o valor da diária: ");
+    decimal valorDiaria = decimal.Parse(Console.ReadLine());
 
-// Cria a suíte
-Suite suite = new Suite(tipoSuite: "Premium", capacidade: 2, valorDiaria: 30);
+    // Cria a suíte com os dados informados
+    Suite suite = new Suite(tipoSuite: tipoSuite, capacidade: capacidade, valorDiaria: valorDiaria);
 
-// Cria uma nova reserva, passando a suíte e os hóspedes
-Reserva reserva = new Reserva(diasReservados: 5);
-reserva.CadastrarSuite(suite);
-reserva.CadastrarHospedes(hospedes);
+    // --- Cadastro dos Hóspedes ---
+    List<Pessoa> hospedes = new List<Pessoa>();
+    Console.Write("Quantos hóspedes serão? ");
+    int quantidadeHospedes = int.Parse(Console.ReadLine());
 
-// Exibe a quantidade de hóspedes e o valor da diária
-Console.WriteLine($"Hóspedes: {reserva.ObterQuantidadeHospedes()}");
-Console.WriteLine($"Valor diária: {reserva.CalcularValorDiaria()}");
+    for (int i = 1; i <= quantidadeHospedes; i++)
+    {
+        Console.Write($"Digite o nome completo do {i}º hóspede: ");
+        // Separa nome e sobrenome, se houver
+        string[] nomeCompleto = Console.ReadLine().Split(' ');
+        string nome = nomeCompleto[0];
+        string sobrenome = nomeCompleto.Length > 1 ? string.Join(" ", nomeCompleto.Skip(1)) : "";
+        hospedes.Add(new Pessoa(nome, sobrenome));
+    }
+
+    // --- Cadastro da Reserva ---
+    Console.Write("Quantos dias deseja reservar? ");
+    int diasReservados = int.Parse(Console.ReadLine());
+
+    // Cria a reserva e associa a suíte e os hóspedes
+    Reserva reserva = new Reserva(diasReservados: diasReservados);
+    reserva.CadastrarSuite(suite);
+    reserva.CadastrarHospedes(hospedes); // A validação de capacidade acontece aqui
+
+    // --- Exibe o Resultado ---
+    Console.WriteLine("\n--- Resumo da Reserva ---");
+    Console.WriteLine($"Hóspedes: {reserva.ObterQuantidadeHospedes()}");
+    Console.WriteLine($"Valor final da diária: {reserva.CalcularValorDiaria():C}");
+}
+catch (Exception ex)
+{
+    // Captura qualquer erro (capacidade excedida, texto em vez de número, etc.)
+    Console.WriteLine($"\nOps, ocorreu um erro: {ex.Message}");
+}
